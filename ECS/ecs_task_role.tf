@@ -1,0 +1,32 @@
+ data "aws_iam_policy_document" "ecs_task_assume_policy" {
+  statement {
+    actions = ["sts:AssumeRole"]
+    principals {
+      type        = "Service"
+      identifiers = ["ecs-tasks.amazonaws.com"]
+    }
+  }
+}
+
+ resource "aws_iam_role" "task_role" {
+  name               = "ecs-task-Terraform_ECS"
+  assume_role_policy = data.aws_iam_policy_document.ecs_task_assume_policy.json
+
+  inline_policy {
+    name = "ecs-task-permissions"
+    policy = jsonencode({
+      Version = "2012-10-17"
+      Statement = [
+        {
+          Action = [
+            "ecr:*",
+            "logs:*",
+            "ssm:*"
+          ]
+          Effect   = "Allow"
+          Resource = "*"
+        }
+      ]
+    })
+  }
+}
