@@ -1,7 +1,3 @@
-provider "aws" {
-  region = var.aws_region
-}
-################################################33
 module "vpc" {
   source = "terraform-aws-modules/vpc/aws"
 
